@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_shell_redirect/onboarding/onboarding_shell.dart';
 import 'package:flutter_shell_redirect/screens/my_home_page.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 part 'main_router.g.dart';
 
 GoRouter mainRouter() {
@@ -42,14 +43,19 @@ class OnboardingFirstScreenRoute extends GoRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const Scaffold(
+    return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
+            const Text(
               'First screen',
             ),
+            TextButton(
+                onPressed: () {
+                  OnboardingSecondScreenRoute().go(context);
+                },
+                child: const Text('Go to second screen'))
           ],
         ),
       ),
@@ -62,13 +68,27 @@ class OnboardingSecondScreenRoute extends GoRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const Scaffold(
+    return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
+            const Text(
               'Second screen',
+            ),
+            Consumer<ExpensiveOnboardingData>(
+              builder: (context, data, child) {
+                return FutureBuilder<String>(
+                  future: data.startExpensiveFetch(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else {
+                      return Text('Expensive data: ${snapshot.data}');
+                    }
+                  },
+                );
+              },
             ),
           ],
         ),
