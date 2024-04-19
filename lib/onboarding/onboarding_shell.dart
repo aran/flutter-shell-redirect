@@ -24,7 +24,7 @@ class ExpensiveOnboardingData {
   String? expensiveData;
 
   Future<String> startExpensiveFetch() {
-    expensiveFetch ??= Future.delayed(const Duration(seconds: 2), () {
+    expensiveFetch ??= Future.delayed(const Duration(seconds: 1), () {
       expensiveData = knownExpensiveData;
       return expensiveData!;
     });

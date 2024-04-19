@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_shell_redirect/onboarding/onboarding_shell.dart';
 import 'package:flutter_shell_redirect/screens/my_home_page.dart';
@@ -40,6 +42,16 @@ class OnboardingShellRouteData extends ShellRouteData {
 
 class OnboardingFirstScreenRoute extends GoRouteData {
   OnboardingFirstScreenRoute();
+
+  @override
+  FutureOr<String?> redirect(BuildContext context, GoRouterState state) async {
+    final data =
+        await context.read<ExpensiveOnboardingData>().startExpensiveFetch();
+    if (data == ExpensiveOnboardingData.knownExpensiveData) {
+      return OnboardingSecondScreenRoute().location;
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
